@@ -1,3 +1,4 @@
+import smtplib
 from datetime import date
 from functools import wraps
 
@@ -12,6 +13,9 @@ from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
 
 import os
+
+OWN_EMAIL = "learning.python.sa@gmail.com"
+OWN_PASSWORD = os.environ.get("EMAIL")
 
 # in project imports
 from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
@@ -182,9 +186,24 @@ def about():
     return render_template("about.html")
 
 
-@app.route("/contact")
+@app.route("/contact", methods=["GET", "POST"])
 def contact():
-    return render_template("contact.html")
+    if request.method == "POST":
+        s_n = request.form['sender_name']
+        s_e = request.form['sender_email']
+        s_p = request.form['sender_phone']
+        s_m = request.form['sender_msg']
+        send_email(s_n, s_e, s_p, s_m)
+        return render_template("contact.html", msg_sent=True, h="Successfully sent your message")
+    return render_template("contact.html", msg_sent=False, h="Contact Me")
+
+
+def send_email(name, email, phone, message):
+    email_message = f"Subject:New Message\n\nName: {name}\nEmail: {email}\nPhone: {phone}\nMessage:{message}"
+    with smtplib.SMTP("smtp.gmail.com") as connection:
+        connection.starttls()
+        connection.login(OWN_EMAIL, OWN_PASSWORD)
+        connection.sendmail(OWN_EMAIL, OWN_EMAIL, email_message)
 
 
 @app.route("/new-post", methods=["GET", "POST"])
