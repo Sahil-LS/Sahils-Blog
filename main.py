@@ -27,7 +27,7 @@ ckeditor = CKEditor(app)
 Bootstrap(app)
 
 # CONNECT TO Database
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", "sqlite:///blog.db")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", "sqlite:///blog_with_comments.db")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 login_manager = LoginManager()
@@ -192,6 +192,7 @@ def about():
 def contact():
     if request.method == "POST":
         s_n = request.form['sender_name']
+        print(s_n)
         s_e = request.form['sender_email']
         s_p = request.form['sender_phone']
         s_m = request.form['sender_msg']
