@@ -192,12 +192,11 @@ def about():
 def contact():
     if request.method == "POST":
         s_n = request.form['sender_name']
-        print(s_n)
         s_e = request.form['sender_email']
         s_p = request.form['sender_phone']
         s_m = request.form['sender_msg']
         send_email(s_n, s_e, s_p, s_m)
-        return render_template("contact.html", msg_sent=True, h="Successfully sent your message")
+        return redirect(url_for("contact"), msg_sent=True, h="Successfully sent your message")
     return render_template("contact.html", msg_sent=False, h="Contact Me")
 
 
