@@ -14,11 +14,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 import os
 
+# in project imports
+from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
+
 OWN_EMAIL = "learning.python.sa@gmail.com"
 OWN_PASSWORD = os.environ.get("EMAIL")
 
-# in project imports
-from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY")
@@ -26,7 +27,7 @@ ckeditor = CKEditor(app)
 Bootstrap(app)
 
 # CONNECT TO Database
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL",  "sqlite:///blog.db")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", "sqlite:///blog.db")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 login_manager = LoginManager()
@@ -101,6 +102,7 @@ def admin_only(fn):
         if int(current_user.get_id()) != 1:
             return abort(404)
         return fn(*args, **kwargs)
+
     return decorated_function
 
 
